@@ -69,4 +69,23 @@ Fedora has a large community including contributors outside of Red Hat, and is u
 CentOS is (was) free to the end user and has a longer relase cycle than Fedora.
 The core of CentOS is vritually identical to RHEL.
 
-Package mangers: yum and dnf, which are RPM-based.
+Package mangers: yum and dnf (RPM-based)
+
+### The SUSE Family
+
+SUSE has SUSE Linux Enterprise Server (SLES) and openSUSE, the enterprise-support and free community versions similar to RHEL and CentOS/Fedora.
+SLES is upstream from openSUSE.
+
+Package manager: Zypper (RPM-based)
+
+Other: YAST - Yet Another Setup Tool.
+
+### The Debian Family
+Debian is upstream for several other distributions, including Ubuntu, which is upstream for many others.
+Debian is a pure open-source community project with a strong emphasis on stability.
+Debian provides by far the largest and most complete software repository of any distro.
+
+Ubuntu aims at providing a compromise between long-term stability and ease of use.
+Ubuntu gets most of its packages from Debian's stable branch.
+
+Package manager: apt (DPKG-based)
