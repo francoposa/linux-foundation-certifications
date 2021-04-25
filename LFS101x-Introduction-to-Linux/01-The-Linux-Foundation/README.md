@@ -29,7 +29,7 @@ The foundation hosts conferences and other events worldwide to:
 
 * provide open forum for the next kernel release
 * bring together devs and sysadmins to work on problems
-* host workgrounds and community groups for active discussions
+* host workgroups and community groups for active discussions
 * connect end users, sysadmins, and devs to grow enterprise Linux use
 * encourage collaboration across the community
 
@@ -67,7 +67,7 @@ Fedora has a close relationship with RHEL and has significantly more software th
 Fedora has a large community including contributors outside of Red Hat, and is used as a testing platform for RHEL releases.
 
 CentOS is (was) free to the end user and has a longer relase cycle than Fedora.
-The core of CentOS is vritually identical to RHEL.
+The core of CentOS is virtually identical to RHEL.
 
 Package mangers: yum and dnf (RPM-based)
 
