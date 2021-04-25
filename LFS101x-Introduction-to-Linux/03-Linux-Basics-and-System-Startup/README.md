@@ -75,3 +75,56 @@ Most distros start six text terminals and one graphics terminal starting with `f
 Within a graphical environment, switching to a text console requires pressing `ctrl + alt +` the appropriate `function` key, with `f1` or `f7` leading to the GUI.
 
 Usually the default command shell is *bash (GNU Bourne Again Shell)*, but there are a number of other advanced command shells available.
+
+## Kernel, init, and Services
+
+### The Linux Kernel
+
+The boot loader loads both the kernel and the initial RAM-based filesystem (initramfs) into memory so it can be used directly by the kernel.
+
+When the kernel is loaded in RAM, it initializes and configures the computer's memory and all the hardware attached to the system - all processors, I/O subsystems, storage devices, etc.
+The kernel also laods some necessary userspace applications.
+
+### /sbin/init/ and Services
+
+Once the kernel has set up all its hardware and mounted the root filesystem, it runs `/sbin/init`.
+This becomes the initial process which starts other processes to get the system running.
+Most other processes on the system trace their origin ultimately to *init*.
+Exceptions include the "kernel processes", started by the kernel directly to manage internal operating system details.
+
+Besides starting the system, *init* is responsible for keeping the system running and shutting it down cleanly.
+One of its responsibilities is to act when necessary as a manager for all non-kernel processes; it cleans up after them on completion, restarts user login services on user login/logout, and does the same for other background system services.
+
+Traditionally this process startup was done using conventions dating back to the 1980s System V variety of UNIX.
+The sysvinit method was a serial process, with the system passing through a series of *runlevels* containing collections of scripts that start and stop services.
+Each runlevel supports a different mode of running the system.
+In each runlevel, services can be set to start, or shut down if already running.
+
+More recently, all major distros have moved away from this sequential approach, though they often continue to support sysvinit for compatibility purposes.
+
+### Startup Alternatives
+
+*Sysvinit*'s  serial process viewed everything as sequential stages, each requiring completion before another could start.
+Startup therefore did not take advantage of parallel processing available on multicore machines.
+
+Further, sysvinit viewed shutdown and reboot as rare events, so it did not matter how long these processes took.
+As Linux systems evolved to require faster and in some cases near-instant startup times, they required startup methods with faster and more advanced capabilities
+Finally, older methods used complex startup scripts that were difficult to keep in sync across distros, kernel versions, architectures, etc.
+
+Two major alternatives were developed: Upstart and systemd.
+
+Systemd has won out in the vast majority of distros, though not with some controversy.
+Systemd provides many features, which makes it an effective one-stop-shop for system startup and service management, though many feel that it violates the UNIX philosophy of each tool only having a single purpose.
+
+### Systemd Features
+
+In distros using systemd, `/sbin/init` now just points to `/lin/systemd/systemd`.
+
+Systemd starts up faster than earlier init methods due to its aggressive parallelization techniques.
+
+Complex startup shell scripts are replaced with simpler config files.
+The configs enumerate what has to be done before a service starts, under which conditions it should be started, and what conditions indicate the service has completed its startup.
+
+Systemd also provides command-line utilities including `systemctl` for service management.
+
+
