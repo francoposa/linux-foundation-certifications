@@ -127,4 +127,43 @@ The configs enumerate what has to be done before a service starts, under which c
 
 Systemd also provides command-line utilities including `systemctl` for service management.
 
+## Linux Filesystem Basics
+
+### Partitions and Filesystems
+
+A **partition** is a physically contiguous section of a desk, or what appears to be physically contiguous in some advanced setups.
+
+A **filesystem** is a method of storing and finding files on a hard disk, usually within a single partition.
+
+Generally a partition is a container in which a filesystem resides, though filesystems can span more than one partition with the use of symbolic links.
+
+
+### The Filesystem Hierarchy Standard
+
+Linux systems store their important files according to a standard layout, the **Filesystem Hierarchy Standard (FHS)**, which is maintained by the Linux Foundation.
+
+All Linux filesystem names are case-sensitive.
+
+Many distros distinguish between core utilities needed for proper system operation, and other programs, placing the latter in the `/usr` directory.
+
+## Linux Distribution Installation
+
+### Questions to Ask When Choosing a Distribution
+
+* What is the main function of the system (server or desktop)?
+* What types of packages are important to the organization?
+* How much hard disk or RAM space is required and how much is available?
+* How often are packages updated?
+* How long is the support cycle for each release?
+* Do you need kernel customization from the vendor or a third party?
+* What hardware are you running on?
+* Do you need long-term stability? Can you accept (or need) a more volatile cutting edge system running the latest software?
+
+## Summary
+
+* A partition is a logical part of the disk.
+* A filesystem is a method of storing/finding files on a hard disk.
+* By dividing the hard disk into partitions, data can be grouped and separated as needed. When a failure or mistake occurs, only the data in the affected partition will be damaged, while the data on the other partitions will likely survive.
+* The boot process has multiple steps, starting with BIOS, which triggers the boot loader to start up the Linux kernel. From there, the initramfs filesystem is invoked, which triggers the init program to complete the startup process.
+* Determining the appropriate distribution to deploy requires that you match your specific system needs to the capabilities of the different distributions.
 
