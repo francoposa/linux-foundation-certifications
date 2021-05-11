@@ -94,8 +94,104 @@ The exact method differs among distros and distro versions.
 For newer systemd-based distros, the display-manager is run as a service so you can stop the GUI with the systemctl utility.
 Most distros with also work with the `telint` command.
 
-`$ sudo systemctl stop gdm` or `sudo telint 3`
+```
+$ sudo systemctl stop gdm # or
+$ sudo telint 3
+```
 
-`$ sudo systemctl start gdm` or (`sudo telint 5`)
+```
+$ sudo systemctl start gdm # or
+$ sudo telint 5
+```
 
 ## Basic Operations
+
+### Logging In and Out
+
+An available text terminal will prompt for a username with the string `login:` and password.
+When typing your password, nothing is displayed in the terminal to prevent others from seeing your password.
+
+Once your session is started by logging in to a text terminal or graphical terminal program, ou can also connect and log into remote systems using **Secure SHell (SSH)**
+
+### Rebooting and Shutting Down
+
+The preferred method to shut down or reboot the system is to use the `shutdown` command.
+This sends a warning message and then prevents ruther suers from logging in.
+The init process will then control shutting down or rebooting the system.
+It is important to always shut down properly; failure to do so can result in damage to the system and/or loss of data.
+
+The `halt` and `powerof` commands issue `shutdown -h` to halt the system; `reboot` issues `shutdown -r` to reboot.
+Both shutting down and rebooting from the command line require superuser (root) access.
+
+When administering a multi-user system, you have the option of notifying all  users prior to shutdown:
+
+```
+$ sudo shutdown -h 10:00 "Shutting down for scheduled maintenance"
+```
+
+**Note**: On recent Wayland-based Linux distros, broadcast messages do not appear on terminal emulation sessions running on the desktop; they appear only in the VT console displays.
+
+
+### Locating Applications
+
+Depending on the specifics of a distro's policy, programs and packages can be installed in various directories.
+In general, executable programs and scripts should live in then `/bin`, `/usr/bin`, `/sbin`, `/usr/sbin` directories, or somewhere under `/opt`.
+They can also appear in `/usr/local/bin`, `/usr/local/sbin`, or in a a directory in a user's account space, such as `/home/student/bin`.
+
+One way to locate programs is to employ the `which` utility.
+
+```
+$ which diff
+/usr/bin/diff
+```
+
+If `which` does not find the program, `whereis` is a good alternative because it looks for packages in a broader range of system directories:
+
+```
+$ whereis diff
+diff: /usr/bin/diff /usr/share/man/man1/diff.1.gz /usr/share/man/man1p/diff.1p.gz
+```
+
+as well as locating source and man files packaged with the program.
+
+### Accessing Directories
+
+When you first log into a system or open a terminal, the default directory should be your home directory.
+You can print the exact path of this with the command `echo $HOME`.
+Many Linux distros actually open new graphical terminals in `$HOME/Desktop`.
+
+The following commands are useful for directory navigation:
+
+* `pwd`: Displays the present working directory
+* `cd ~` or `cd`: Change to home directory
+* `cd ..`: Change to parent directory
+* `cd -`: Change to previous directory
+
+
+### Understanding Absolute and Relative Paths
+
+There are two ways to identify paths:
+
+* **Absolute pathname**: An absolute pathname begins with the root `/` and follows the tree branch by branch until it reaches the desired directory or file.
+* **Relative pathname**: starts from present directory, either with `./` or no leading slash at all.
+Can also start from another directory which can be referred to by shorthand, such as `../` for parent directory or `~` for home directory.
+
+
+Multiple slashes between directories and files are allowed, but all but one slash between the elements will be ignored by the system.
+`////usr/bin` is valid, but is seen as `/usr/bin` by the system.
+
+### Exploring the filesystem
+
+Traversing up and down the filesystem tree can get tedious.
+The `tree` command is a good way to get a bird's-eye view of the filesystem.
+User `tree -d` to view just the directories and to suppress listing file names.
+
+The following commands can help in exploring the filesystem:
+
+* `cd /`: Change directory to the root directory or the path you supply
+* `ls`: List the contents of the present working directory
+* `ls -a`: List all the files including hidden files (dotfiles) and directories
+* `tree`: Displays a tree view of the filesystem
+
+
+
