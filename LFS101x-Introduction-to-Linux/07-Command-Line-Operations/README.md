@@ -194,4 +194,54 @@ The following commands can help in exploring the filesystem:
 * `tree`: Displays a tree view of the filesystem
 
 
+### Hard Links
 
+The `ln` utility is used to create hard links and (with the `-s` option) softlinks, also known as symbolic links or symlinks.
+These two kinds of links are very useful in UNIX-based operating systems.
+
+Supposed that `file1` already exists.
+A hard link, called `file2`, is created with the command
+
+```
+$ ln file1 file2
+```
+
+Note that two files now appear to exist.
+However, a closer inspection of the file listing shows that this is not quite true.
+
+```
+$ ls -li file1 file2
+```
+
+The `-i` option to `ls` prints out in the first column the inode number, which is a unique quantity for each file object.
+This field is the same for both of these files; what is really going on here is that it is only one file, but it has more than one "name" associated with it, as is indicated by the `2` that appears in the `ls` output.
+
+Hard links are very useful and they save space, but you have to be careful with their use, sometimes in subtle ways.
+For example, if remove either `file1` or `file2` in the example, the inode object as well as the remaining file name will stay, which may lead to subtle errors later if you recreate a file of that name.
+
+If you edit one of the files, exactly what happens depends on your editor; most editors, including vi and gedit, will retain the link by default, but it is possible that modifying one of the names may break the link and result in the creation of two objects.
+
+
+### Soft (Symbolic) Links
+
+Soft or Symbolic links are created with the `-s` option to `ln`:
+
+```
+$ ln -s file1 file3
+$ ls -li file1 file3
+```
+
+Notice `file3` no longer appears to be a regular file, and it clearly points to `file1` and has a different inode numbers.
+
+Symbolic links take no extra space on the filesystem unless their names are very long.
+They are very convenient, as they can easily be modified to point to different places.
+
+Unlike hard links, soft links can point to objects on other filesystems, partitions, and/or disks and other media, which may or may not be currently available.
+In the case where the link does not point to an existing or currently available file, you obtain dangling link.
+
+### Navigating the Directory History
+
+The `cd` command remembers where you were last and lets you go back with `cd -`.
+For remembering more than just the last directory visited, use  `pushd` to change the directory instead of `cd`; this pushes your starting directory onto a stack.
+Using `popd` will then send you back to those directories, walking in reverse order.
+The list of directories is displayed with the dirs command.
