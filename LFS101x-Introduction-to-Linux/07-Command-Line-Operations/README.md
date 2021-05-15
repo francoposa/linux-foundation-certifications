@@ -245,3 +245,284 @@ The `cd` command remembers where you were last and lets you go back with `cd -`.
 For remembering more than just the last directory visited, use  `pushd` to change the directory instead of `cd`; this pushes your starting directory onto a stack.
 Using `popd` will then send you back to those directories, walking in reverse order.
 The list of directories is displayed with the dirs command.
+
+## Working with Files
+
+### Viewing Files
+
+You can use the following command-line utilities to view files:
+
+* `cat`: used for viewing files that are not very long; does not provide any scrollback
+* `tac`: used to look at a file backwards, starting with the last line
+* `less`: used to view larger files because it is a paging program.
+It pauses at each screen full of text, provides scrollback capabilities, and lets you search and navigate within the file.
+Use `/` to search forward and `?` to search backward.
+An older program named `more` is still used, but has fewer capabilities: "less is more".
+* `tail`: used to print the last 10 lines of a file by default.
+Specify the number of lines with `-n [number]` or just `-[number]`.
+* `head`: opposite of `tail`; prints first 10 lines of a file by default
+
+### touch
+
+`touch` is often used to set or update the accessed changed, and modified timestamps of files.
+By default, it resets a file's timestamp to match the current time.
+
+However, you can also create an empty file using `touch`:
+
+```
+$ touch [filename]
+```
+
+`touch` provides several useful options.
+For example, the `-t` option allows you to set the date and timestamp of the file to a specific value, as in:
+
+```
+$ touch -t 12091600 [filename]
+```
+
+This sets the file's timestamp to 4 PM, December 9th (12 09 1600).
+
+### mkdir and rmdir
+
+`mkdir` is used to create a directory:
+
+* `mkdir [directory name]` creates the directory under the current directory
+* `mkdir [some absolute or relative path]/[directory name]` creates the directory under the specified paths
+
+`rmdir` removes empty directories.
+To remove a non-empty directory with all of its comments, you must use `rm -rf`.
+
+### Moving, Renaming, or Removing a Files
+
+The `mv` command can simply rename a file, or move the file to another location, optionally changing its name as well.
+
+If you are not certain about removing files that match a pattern you supply, you can run `rm` interactively (`rm -i`) to prompt before each removal.
+
+* `mv`: Rename a file
+* `rm`: Remove a file
+* `rm -f`: Forcefully remove a file
+* `rm -i`: interactively remove a file
+
+### Renaming or Removing a Directory
+
+`rmdir` works only on empty directories; otherwise you get an error.
+
+While typing `rm -rf` is a fast and easy way to remove a whole filesystem tree recursively, it is extremely dangerous and should be used with the utmost care, especially when used by root.
+
+* `mv`: Rename a directory
+* `rmdir`: Remove an empty directory
+* `rm -rf`: Forecully remove a directory recursively
+
+### Modifying the Command Line Prompt
+
+The `PS1` variable is the character string that is displayed as the prompt on the command line.
+Most distros set `PS1` to a known default value which is suitable in most cases.
+For example, some system administrators require the user and host system name to show up on the command line as in:
+
+```
+student@lab1-c3 $
+```
+
+This can prove useful if you are working in multiple roles and want to be reminded of who you are and which machine you are on.
+The prompt above could be implemented for a bash shell by setting `PS1='\u@\h \$'`.
+
+By convention, most systems are set up so that the root user has a pound sign (`#`) as their prompt.
+
+
+## Searching for Files
+
+### Standard File Streams
+
+When commands are executed, by default there are three standard file streams (or descriptors) always open for use:
+
+* standard input (stdin)
+    * value 0
+    * ex: keyboard
+* standard output (stdout)
+    * value 1
+    * ex: terminal
+* standard error (stderr)
+    * value 2
+    * ex: log file
+
+Usually, `stdin` is your keyboard, and `stdout` and `stderr` are printed on your terminal.
+`stderr` is often redirected to an error logging file, while `stdin` is supplied by redirecting input to come from a file or from the output of a previous command through a pipe.
+`stdout` is also often redirected into a file.
+Nothing should be written to `stderr` during normal execution of a successful process.
+
+In Linux, all open files are represented internally by what are called file descriptors.
+Simply put, these are represented by numbers starting at zero.
+`stdin` is file descriptor 10, `stdout` is file descriptor 1, and `stderr` is file descriptor 2.
+Typically, if other files are opened in addition to these three, which are opened by default, they will start at file descriptor 3 and increase from there.
+
+### I/O Redirection
+
+Through the command shell, we can redirect the three standard file streams so that we can get input from either a file or another command, instead of from our keyboard, and we can write output and errors to files or use the to provide input for subsequent commands.
+
+For example, if we have a program called `do_something` that reads from `stdin` and writes to `stdout` and `stderr`, we can change its input source by using the less-than sign (`<`) followed by the name of the file to be consumed for input data:
+
+```
+$ do_something < input-file
+```
+
+If you want to send the `stdout` output to a file, use the greater-than sign (`>`) as in:
+
+```
+$ do_something > output-file
+```
+
+Because `stderr` is not the same as `stdout`, error messages will still be seen on the terminal windows in the above example.
+
+If you want to redirect `stderr` to a separate file, you use `stderr`'s file descriptor number (2), the greater-than sign (`>`), followed by the name of the file:
+
+```
+$ do-something 2> error-file
+```
+
+By the same logic, `do_something 1> output-file` is the same as `do_something > output-file`.
+
+A special shorthand notation can send anything written to file descriptor 2 (`stderr`) to the same place as file descriptor 1 (`stdout`): `2>&1`.
+
+```
+$ do_something > all-output-file 2>&1
+```
+
+Bash permits an easier syntax for the above:
+
+```
+$ do_something >& all-output-files
+```
+
+### Pipes
+
+The UNIX/Linux philosophy is to have many simple and short programs or commands cooperate together to produce complex results, rather than have one complex program with many possible options and modes of operation.
+In order to accomplish this, extensive use of pipes is made.
+You can pipe the output of one command or program into another as its input.
+
+In order to do this we use the vertical bar (`|`) (pipe symbol) beween commands:
+
+```
+$ command1 | command2 | command3
+```
+
+The above represents what we often call a pipeline, and allows Linux to combine the actions of several commands into one.
+This is extraordinarily efficient because `command2` and `command3` do not have to wait for the previous pipeline commands to complete before they can begin working on the data in their input streams.
+On multi-CPU or multi-core systems, the available computing power is much better utilized and things get done quicker.
+
+Further, there is no need to save output in temporary files in between the stages of the pipeline, which saves disk space and reduces reading and writing to disk, which is often the slowest bottleneck in getting something done.
+
+### locate
+
+The `locate` utility program performs a search taking advantage of a previously constructed database of files and directories on your system, matching all entries that contain a specified character string.
+This can result in a very long list.
+
+To get a shorter and possible more relevant list, we can use the `grep` program as a filter.
+`grep` will print only the lines that contain one of more specified strings, as in:
+
+```
+$ locate zip | grep bin
+```
+
+which will list all the files and directories with both "zip" and "bin" in their name.
+
+`locate` utilizes a database created by a related utility, `updatedb`.
+Most Linux systems run this automatically once a day.
+However, you can update it any time by just running `updatedb` from the command line as the root user.
+
+### Wildcards and Matching File Names
+
+You can search for a filename containing specific characters using wildcards.
+
+* `?`: Matches any single character
+* `*`: Matches any string of characters
+* `[set]`: Matches any character in the set of characters
+* `[!set]`: Matches any character not in the set of characters
+
+### The find Program
+
+`find` recurses down the filesystem tree from any particular directory or set of directories and locates files that match specified conditions.
+The default pathname is always the current working directory.
+
+System adminstrators sometimes scan for potentially large core files (which contain diagnostic information after a program fails) that are more than several weeks old in order to remove them.
+
+It is also common to remove files in inessential or outdated files in `tmp` (and other volatile directories, such as those containing cached files) that have not been accessed recently.
+Many Linux distros use shell scripts that run periodically (through `cron` usually) to perform such house cleaning tasks.
+
+### Using find
+
+When no arguments are given, `find` lists all files in the current directory and all of its subdirectories.
+Commonly used option to shorten the list include:
+
+* `-name`: Only list files with a certain pattern in their name
+* `-iname`: Like `-name`, but ignoring the case of file names
+* `-type`: Restrict results to files of a specified type, such as `d` for directory, `l` for symbolic link, or `f` for a regular file, etc.
+
+
+Searching for files and directories named "gcc":
+
+```
+$ find /usr -name gcc
+```
+
+Searching only for directories named "gcc":
+
+```
+$ find /usr -type d -name gcc
+```
+
+Searching only for regular files named "gcc":
+
+```
+$ find /usr -type f -name gcc
+```
+
+### Using Advanced find Options
+
+Another use of find is the ability to run commands on the files that match your search criteria.
+The `-exec` options is used for this purpose.
+
+To find and remove all files that end with `.swp`:
+
+```
+$ find -name "*.swp" -exec rm {} ';'
+```
+
+The `{}` (squiggly brackets) is a placeholder that will be filled with each of the file names that result from the find expression and the command will be run on each one individually.
+
+Note that you must end the command with either `';'`, including the single quotes, or `\;`.
+Both forms are fine.
+
+One can also use the `-ok` option, which behaves the sames `-exec`, except that `find` will prompt you for permission before executing the command.
+This is a good way to test your results before blindly executing any potentially dangerous commands.
+
+
+### Finding Files Based on Time and Size
+
+To find files based on time:
+
+```
+$ find / -ctime 3
+```
+
+Here, `ctime` is when the inode metadata (file ownership, permissions, etc.) last changed; it is often, but not necessarily, when the file was first created.
+You can also search for accessed/last read( `-atime`) or modified/last written (`-mtime`) times.
+The number is the number of days can be expressed as either a number number (`n`) that means exactly that value, `+n`, which means greater than that number, or `-n`, which means less than that number.
+There are similar options for times in minutes: `-cmin`, `-amin`, and `-mmin`.
+
+To find files based on size:
+
+```
+$ find / -size 0
+```
+
+Here the size is in 512-byte blocks, by default; you can also specify bytes (c) kilobytes(k), megabytes(M), gigabytes (G), etc.
+As with the time numbers above, file sizes can also be exact numbers (`n`), `+n`, or `-n`.
+For details, consult the man page for find.
+
+For example, to find files greater than 10 MB in size and running a command on those files:
+
+```
+$ find / -size +10M -exec command {} \;
+```
+
+
