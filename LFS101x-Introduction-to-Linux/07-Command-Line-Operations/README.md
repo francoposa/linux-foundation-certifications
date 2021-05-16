@@ -525,4 +525,35 @@ For example, to find files greater than 10 MB in size and running a command on t
 $ find / -size +10M -exec command {} \;
 ```
 
+## Installing Software
 
+### Package Management Systems on Linux
+
+The core parts of a Linux distro and most of its add-on software are installed via the package management system.
+Each package contains the files and other instructions needed to make one software component work well with the other components that comprise the entire system.
+Packages can depend on each other.
+A package for a web-based application written in Python can depend on the Python package.
+
+There are two broad families of package managers: those based on Debian and those which use RPM as their low-level package manager.
+The two systems are incompatible but broadly speaking, they provide the same features and satisfy the same needs.
+There are other systems used by more specialized Linux distributions.
+
+### Package Managers: Two Levels
+
+Both package management systems operate on two distinct levels: a low-level tool such as dpkg or rpm takes care of the details of unpacking individual packages, running scripts, and getting the software installed correctly, while a high-level tool such as apt, yum, dnf or zypper works with groups of packages, downloads packages from the vendor, and determines dependencies.
+
+Most of the time users only need to work with the high-level tool, which takes care of calling the low-level tool as needed.
+Dependency resolution is a particularly important feature of the high-level tool, as it handles the details of finding and installing each dependency for you.
+Installing a single package can result in many dozens or even hundreds of dependencies being installed.
+
+### Working with Different Package Management Systems
+
+The Advanced Packaging Tool (apt) is the underlying package management system that manages software on Debian-based systems.
+While it forms the backend for graphical package managers, its native user interface is the command line, with programs that include apt/apt-get and apt-cache.
+
+Yum is an open source command-line package management utility for the RPM-compatible LInux distros that belong to the Red Hat family.
+Yum has both commandline and graphical user interfaces.
+Fedora and RHEL 8 have replaced yum with dnf, which has less historical baggage, has nice new capabilities, and is mostly backwards-compatible with yum for day-to-day commands.
+
+Zypper is the package management system for the SUSE/openSUSE family and is also based on RPM.
+Zypper resembles yum quite closely.
