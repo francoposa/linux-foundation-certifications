@@ -111,3 +111,31 @@ To view a synopsis of these built-in shell commands, you can just type `help` in
 Type `help <command>` to view the full information for a specific command.
 
 For these built-in shell commands, `help` performs the same basic function as the `-h` and `--help` arguments perform for standalone programs.
+
+## Other Documentation Sources
+
+### Graphical Help Systems
+
+All Linux desktop systems have a graphical help application.
+This application is usually displayed as a question make icon or an image of a ship's life preserver, and can also always be found within the menu system.
+These programs usually contain custom help for the desktop itself and some of its applications, and will sometimes also include graphically-rendered **info** and **man** pages.
+
+To launch the graphical help system from a terminal window:
+
+* GNOME: `gnome-help` or `yelp`
+* KDE: `khelpcenter`
+
+### Package Documentation
+
+Linux documentation is also available as part of the package management system.
+Usually, this documentation is pulled directly from the upstream source code, but it can also contain information about how the distro packaged and set up the software.
+
+Such information is placed under the `/usr/share/doc` directory, grouped in subdirectories named after each package, sometimes including the version number in the name.
+
+### Online Resources
+
+There are many places to access online Linux documentation.
+
+The book "The Linux Command Line" has been well-reviewed by other users of this course, and is available for free under a Create Commons license.
+
+Each distro also has its own user-generated forums and wiki sections.
