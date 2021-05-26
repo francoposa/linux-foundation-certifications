@@ -248,7 +248,7 @@ The following information about each process is displayed:
 * Execution time (`TIME+`)
 * Command (`COMMAND`)
 
-### Interactive Keys with topic
+### Interactive Keys with top
 
 `top` can be used interactively for monitoring and controlling processes.
 While `top` is running in a terminal window, you can enter single-letter commands to change its behavior.
@@ -264,4 +264,45 @@ Some commands include:
 * `f`: Enter the `top` configuration screen
 * `o`: interactively select a new sort order for the process list
 
+## Starting Processes in the Future
 
+### Scheduling Future Processes Using at
+
+The `at` utility program can be used to execute and non-interactive command at a specified time.
+
+```
+$ at now + 2 days
+at> cat file.txt  # enter the command
+at> <EOT>  # press CTRL-D here
+$
+```
+
+### cron
+
+`cron` is a time-based scheduling utility program.
+It can launch brackground jobs at specific times and/or days on an ongoing basis.
+`cron` is driven by a configuration file `/etc/crontab` (cron table) which contains the various shell commands to be run at the scheduled intervals.
+There are both system-wide `crontab` files and individual user-based ones.
+Each line of a `crontab` file represents a job, and is composed of a `CRON` expression followed by a shell command to execute.
+
+Typing `crontab -e` will open the crontab editor.
+Each line of the `crontbat` file will contain 6 fields:
+
+* `MIN`: Minutes, 0-59
+* `HOUR`: Hours, 0-23
+* `DOM`: Day of Month, 1-31
+* `DOW`: Day of Week, 0-6 with 0 = Sunday
+* `CMD`: Command to be executed
+
+### sleep
+
+A command or a job may need to be delayed or suspended.
+For example, a process may need to wait for a server to become available, a device to mount, etc.
+
+`sleep` suspends execution for the at least the specified period of time, which can be given as the number of seconds (default if time unit is not specified), minutes, hours, or days.
+
+```
+$ sleep NUMBER[SUFFIX]
+```
+
+`SUFFIX` may be `s` (or nothing) for seconds, `m` for minutes, `h` for hours, `d` for days.
