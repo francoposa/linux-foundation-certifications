@@ -129,4 +129,82 @@ $ sudo mount servername:/projects /mnt/nfs/projects
 Remember that if `/etc/fstab` is not modified, this remote mount will not be present after system restart.
 Further, you may want to add the `nofail` option in the fstab to allow the client system to boot when the NFS server is not available.
 
+## Filesystem Architecture
 
+### The /bin and /sbin Directories
+
+The `/bin` directory contains executable binaries, essential commands used to boot the system or operate in single-user mode, and essential commands required by all system users, such as cat, cp, ls, mv, ps, and rm.
+
+The `/sbin` directory is intended for essential binaries related to system administration, such as fsck and ip.
+
+To view these programs:
+
+```
+$ ls /bin /sbin
+```
+
+Commands that are not essential (theoretically) for the system to boot or operate in single-user mode are placed in the `/usr/bin` and `/usr/sbin` directories.
+
+Historically, this was done so `/usr` could be mounted as a separate filesystem at a later stage of system startup or even over a network.
+Today, this distinction is mostly obsolete.
+In fact, many distros have been discovered to be unable to boot with this separation, as this modality had not been used or tested for a long time.
+
+Thus, on some of the newest Linux distros, `/usr/bin` and `/bin` are actually just symbolically linked together, as are `/usr/sbin` and `/sbin`.
+
+### The /proc Filesystem
+
+Certain filesystems, like the one mounted at `/proc`, are called **pseudo-filesystems** because they have no permanent presence anywhere on the disk.
+
+The `/proc` filesystem contains virtual files (files that exist only in memory) that permit vieweing constantly changing kernel data.
+`/proc` contains files and directories that mimic kernel structures and configuration information.
+It does not contain real files, just runtime system information, e.g. system memory, devices mounted, hardware configuration, etc.
+Some important entries in `/proc` are:
+
+`/proc/cpuinfo`
+`/proc/interrupts`
+`/proc/meminfo`
+`/proc/mounts`
+`/proc/partitions`
+`/proc/version`
+
+`/proc` has subdirectories as well, including:
+
+`/proc/<Process-ID-#>`
+`/proc/sys`
+
+### The /dev Directory
+
+The `/dev` directory contains **device nodes** a type of pseudo-file used by most hardware and software devices, except for network devices.
+This directory is:
+
+* Empty on the disk partition when it is not mounted
+* Contains entires which are created by the **udev** system, which creates and manages device nodes on Linux, creating them dynamically when devices are found.
+
+The `/dev` directory contains items such associated
+
+1. `/dev/sda1`: first partition on the first hard disk
+2. `/dev/lp1`: second printer
+3. `/dev/random`: a source of random numbers
+
+### The /var Directory
+
+The `/var` (variable) directory contains files that are expected to change in size and content as the system is running, such as:
+
+* System log files: `/var/lib`
+* Packages and database files: `/var/lib`
+* Print queues: `/var/spool`
+* Temporary files: `/var/tmp`
+
+The `/` directory may be put on its own filesystem so that the growth of the files can be accommodated and any exploding file sizes do not fatally affect the sysetm.
+`/var` also contains network services directories such as `/var/ftp` (FTP) and `/var/www` (the HTTP web service).
+
+### The /etc Directory
+
+The `/etc` directory is the home for system configuration files.
+It contains no binary programs, although there are some executable scripts.
+For example, `/etc/resolv.conf` tells the system where to go on the network to obtain host name to IP address mappings (DNS).
+Files like `passwd`, `shadow`, and `group` for managing user accounts are also found in the `/etc` directory.
+While some distros have historically had their own extensive infrastructure under `/etc` (for example, Red Hat and SUSE have used `/etc/sysconfig`), with the advent of systemd there is much more uniformity among distros today.
+
+Note that `/etc` is used for system-wide configuration files and only the superuser can modify files there.
+User-specific configuration files are always found under their home directory.
