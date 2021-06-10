@@ -195,7 +195,7 @@ The `/var` (variable) directory contains files that are expected to change in si
 * Print queues: `/var/spool`
 * Temporary files: `/var/tmp`
 
-The `/` directory may be put on its own filesystem so that the growth of the files can be accommodated and any exploding file sizes do not fatally affect the sysetm.
+The `/var` directory may be put on its own filesystem so that the growth of the files can be accommodated and any exploding file sizes do not fatally affect the sysetm.
 `/var` also contains network services directories such as `/var/ftp` (FTP) and `/var/www` (the HTTP web service).
 
 ### The /etc Directory
@@ -208,3 +208,68 @@ While some distros have historically had their own extensive infrastructure unde
 
 Note that `/etc` is used for system-wide configuration files and only the superuser can modify files there.
 User-specific configuration files are always found under their home directory.
+
+### The /boot Directory
+
+The `/boot` directory contains the few essential files needed to boot the system.
+For each alternative kernel installed on the system there are four file:
+
+* `vmlinuz`: The compressed Linux kernel, required for booting.
+* `initramfs`: The initial ram filesystem, required for booting, sometimes called initrd
+* `config`: The kernel configuration file, only used for =debugging and bookkeeping
+* `System.map`: Kernel symbol table, only used for debugging.
+
+Each of these files has a kernel version appended to its name.
+
+The Grand Unified Bootloader (GRUB) files such as `/boot/grub/grub.conf` or `/boot/grub2/grub2.cfg` are also foundunder the `/boot` directory.
+
+Names will vary and tend to look somewhat different across different distros.
+
+### The /lib and /lib64 Directories
+
+The `/lib` directory contains libraries (common code shared by applications and needed for them to run) for the essential programs in `/bin` and `/sbin`.
+These library filenames start with either `ld` or `lib`, e.g. `/lib/libncurses.so.5.9`.
+
+Most of these are what is known as dynamically-loaded libraries, also known as shared libraries or Shared Objects (SO).
+On Some Linux distros there exists a `/lib64` directory containing 64-bit libraries, while `/lib` contains the 32-bit versions.
+
+On recent Linux distros, one finds that, just like for `/bin` and `/sbin`, the `/lib` and `/lib64` directories just point to those under `/usr`: `/usr/lib` and `/usr/lib64`.
+
+Kernel modules (kernel code, often device drivers, that can be loaded and unloaded without restarting the system) are located in `/lib/modules/<kernel-version-number>`.
+
+### Removable Media: the /media, /run, and /mnt Directories
+
+One often uses removable media, such as USB drives, CDs, DVDs, etc.
+To make the material accessible through the regular filesystem, it must be mounted at a convenient location.
+Most Linux systems are configured so any removable media are automatically mounted when the system registers that something has been plugged in.
+
+While historically these were mounted under the `/media` directory, modern Linux distros place these mount points under the `/run` directory.
+For example, a USB drive with a label `myusbdrive` for a user name `student` would be mounted at `run/media/student/myusbdrive`.
+
+The `/mnt` directory has been used since the early days of UNIX for temporarily mounting filesystems.
+These can be those on removable media, but more often might be network filesystems, which are not normally mounted.
+Or these can be temporary partitions, or so-called **loopback** filesystems, which are files which pretend to be partitions.
+
+### Additional Directories Under /
+
+* `/opt`: Optional application software packages
+* `/sys`: Virtual pseudo-filesystem giving information about the system and hardware.
+Can be used to alter system parameters and for debugging purposes.
+* `/tmp`: Temporary files; on some distros, `/tmp` is erased on reboot and/or may actually be a ramdisk in memory.
+* `/usr`: Multi-user applications, utilities, and data
+
+
+### The /usr Directory Tree
+
+The `/usr` directory tree contains theoretically non-essential programs and scripts, in the sense that they should not be needed to initially boot the system.
+The `/usr` directory tree has at least the following sub-directories:
+
+* `/usr/include`: Header files used to compile applications
+* `/usr/lib`: Libraries for programs in `/usr/bin` and `/usr/sbin`
+* `/usr/lib64`: 64-bit libraries for 64-bit programs in `/usr/bin` and `/usr/sbin`
+* `/usr/sbin`: Non-essential system binaries, such as system daemons
+* `/usr/share`: Shared data used by applications, generally architecture-independent
+* `/src/src`: Source code, usually for the Linux kernel
+* `/usr/local`: Data and programs specific to the local machine.
+Subdirectories include `bin`, `sbin`, `lib`, `share`, `include`, etc.
+* `/usr/bin`: The primary directory of executable commands on the system
