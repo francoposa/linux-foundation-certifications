@@ -258,7 +258,6 @@ Can be used to alter system parameters and for debugging purposes.
 * `/tmp`: Temporary files; on some distros, `/tmp` is erased on reboot and/or may actually be a ramdisk in memory.
 * `/usr`: Multi-user applications, utilities, and data
 
-
 ### The /usr Directory Tree
 
 The `/usr` directory tree contains theoretically non-essential programs and scripts, in the sense that they should not be needed to initially boot the system.
@@ -273,3 +272,59 @@ The `/usr` directory tree has at least the following sub-directories:
 * `/usr/local`: Data and programs specific to the local machine.
 Subdirectories include `bin`, `sbin`, `lib`, `share`, `include`, etc.
 * `/usr/bin`: The primary directory of executable commands on the system
+
+## Comparing Files and File Types
+
+### Comparing Files with diff
+
+`diff` is used to compare files and directories, with many useful options (see `man diff`) including:
+
+* `-c`: Provides three lines of context before and after the differing lines
+* `-r`: Recursively compare subdirectories including the current directory
+* `-i`: Ignore case differences
+* `-w`: Ignore whitespace differences
+* `-q`: Quiet - report if files are different, but do not list the differences
+
+```
+$ diff [options] <filename1> <filename2>
+```
+
+`diff` if meant for use with text files; for binary files use `cmp`.
+
+### Using diff3 and patch
+
+`diff3` compares three files at once using one file as the reference basis for the other two.
+
+```
+$ diff3 [options] <filename1> <reference-file> <filename2>
+```
+
+Modifications to source code and configuration files are often distributed utilizing patches, which are applied with the `patch` program.
+A patch file contains the deltas (changes) required to update an older version of a file to the new one.
+
+The patch files are produced by running `diff` with the correct options, as in:
+
+```
+$ diff -Nur originalfile newfile > patchfile
+```
+
+Distributing only the patch ismore concise and efficient than distributing the entire file.
+For a one-line change in a file that contains 1000 lines, the patch file will be just a few lines long.
+
+To apply a patch, use one of the two methods below:
+
+```
+$ patch -p1 < patchfile
+$ patch originalfile patchfile
+```
+
+The first usage is more common as it is often used to apply changes to an entire directory tree rather than just one file, as in the second example.
+To understand the use of the `-p1` option and others, see `man patch`.
+
+### Using the file utility
+
+In Linux, a file's extension does not categorize it the way it might in other operating systems - one cannot assume that `file.txt` is a text file and not an executable program.
+In Linux, a filename is generally more meaningful to the user of the system than to the system itself.
+Most applications directly examine a file's contents to see what kind of object it is, rather than relying on an extension.
+
+The real nature of a file can be ascertained using the `file` utility. For the filenames given as arguments, it examines the contents and characteristics to determine whether the files are plain text, shared libraries, executable programs, scripts, etc.
