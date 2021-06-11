@@ -328,3 +328,77 @@ In Linux, a filename is generally more meaningful to the user of the system than
 Most applications directly examine a file's contents to see what kind of object it is, rather than relying on an extension.
 
 The real nature of a file can be ascertained using the `file` utility. For the filenames given as arguments, it examines the contents and characteristics to determine whether the files are plain text, shared libraries, executable programs, scripts, etc.
+
+### Using rsync
+
+`rsync` is a powerful utility for backing up and syncing files and directories.
+
+Note that `rsync` can be very destructive.
+Accidental misuse can do a lot of harm to data and programs by inadvertently copying changes to where they are not wanted.
+Take care to specify the correct options and paths.
+It is highly recommended that you first test your `rsync` command using the `-dry-run` option to ensure that it provides the intended results.
+
+```
+$ rsync sourcefile destinationfile
+```
+
+The contents of `sourcefile` will be copied to `destinationfile`, where either file can be on the local machine or on a networked machine.
+
+A good combination of options is:
+
+```
+$ rsync --progress -avrxH --delete sourcedir destinationdir
+```
+
+### Compressing Data
+
+File data is often compressed to save disk space and reduce the time it takes to transmit files over networks.
+
+Linux uses a number of methods to perform this compression, including:
+
+* `gzip`: The most frequently used Linux compression utility
+* `bzip2`: Produces files significantly smaller than those produced by `gzip`
+* `xz`: The most space-efficient compression utility used in Linux
+* `zip`: Often required to examine and decompress archives from other operating systems
+
+These tools and techniques vary in the efficiency of the compression (how much space is saved) and in how long they take to compress; generally the more efficient techniques take longer.
+Decompression time does not vary as much across different methods.
+
+In addition, the `tar` utility is often used to group files in an archive and then compress the whole archive once.
+
+### Compressing Data Using gzip
+
+`gzip` is the most often used Linux compression utility.
+It compresses very well and is very fast.
+
+Some usage examples:
+
+* `gzip *`: Compresses all files in the current directory; each file is compressed and renamed with a `.gz` extension
+* `gzip -r projectX`: Compresses all files in the `projectX` directory, along with all files in all of the directories under `projectX`.
+* `gunzip foo`: Decompresses `foo` found in the file `foo.gz`.
+Under the hood, the `gunzip` command is the same as calling `gzip -d`
+
+### Compressing Data Using bzip2
+
+`bzip2` has a syntax that is similar to gzip but it uses a different compression algorithm and produces significantly smaller files, at the price of taking a longer time to do its work.
+
+Usage examples are similar to `gzip`:
+
+* `bzip2 *`: Compress all files in the current directory and replaces each file with a file renamed with a `.bz2` extension
+* `bunzip2 *.bz2`: Decompresses all files with an extension of `.bz2` in the current directory.
+Under the hood, the `bunzip2` command is the same as calling `bzip2 -d`.
+
+### Compressing Data using xz
+
+`xz` is the most space-efficient compression utility used in Linux and is used to store archives of the Linux kernel.
+It trades a slower compression speed for an even higher compression ratio.
+
+Some usage examples:
+
+* `xz *`: Compresses all of the files in the current directory and replaces each file with ones with a `.xz` extension.
+* `xz foo`: Compresses `foo` into `foo.xz` using the default compression level (-6), and removes `foo` if compression succeeds.
+* `xz -dk bar.xz`: Decompresses `bar.xz` into `bar` and does not remove `bar.xz` even if compression is successful
+* `xz -dcf a.txt b.txt.xz > abcd.txt`: Decompresses a mix of compressed and uncompressed files to standard output using a single command
+* `xz -d *.xz`: Decompresses the files compressed using xz
+
+
